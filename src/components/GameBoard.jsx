@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 const GameBoard = () => {
+    const [point, setPoint] = useState(5);
     const [randomNum, setRandomNum] = useState(Math. floor(Math.random() * 100));
     const [choiceNum, setChoiceNum] = useState("");
     const [hint, setHint] = useState("0 ~ 100 사이의 숫자를 맞춰보세요");
@@ -26,18 +27,33 @@ const GameBoard = () => {
         // 랜덤 숫자와 유저가 선택한 숫자 
         if(randomNum === checkNum) {
             setHint("정답입니다! 랜덤값을 초기화합니다.");
+            {/*setRandomNum(Math.floor(Math.random() * 100));
+            setChoiceNum("");
+             setPoint(5);*/}
+
+
+            if(point > 0) {
+                // 기존의 점수 불러옴
+                let savedPoint = localStorage.getItem("point");
+                // 저장 + 현재 점수와 기존의 점수 합침
+                localStorage.setItem("point", parseInt(savedPoint) + point);
+            }
+
             setRandomNum(Math.floor(Math.random() * 100));
             setChoiceNum("");
-
+            setPoint(5);
         } else if (randomNum > checkNum) {
             setHint(`정답은 ${checkNum}보다 높은 숫자입니다.`);
+            setPoint(point -1);
         } else if (randomNum < checkNum) {
             setHint(`정답은 ${checkNum}보다 낮은 숫자입니다.`);
+            setPoint(point -1);
         }
     };
 
     useEffect(() => console.log(`랜덤 숫자는 ${randomNum}입니다.`),[randomNum]);
     useEffect(() => console.log(`유저가 선택한 숫자는 ${choiceNum}입니다.`),[choiceNum]);
+    useEffect(() => console.log(`현재 포인트 ${ point}입니다.`),[point]);
 
     return (
       <div className=" w-full grow flex flex-col justify-center items-center">
